@@ -1,0 +1,34 @@
+#aboutMenu ul,li{
+    list-style-type:none;
+    padding:0px;
+    margin:0px;
+}
+#aboutMenu .menu{
+    width:190px;line-height: 28px;
+    border-top:dashed 1px #ccc;
+}
+#aboutMenu a{
+    text-decoration:none;
+    color:#666;
+    padding:10px;
+}
+#aboutMenu .optn{
+    border-bottom:1px solid #000;
+}
+#aboutMenu div{padding:10px;}
+#aboutMenu div img{float:left;padding-right:6px;}
+#aboutMenu span{
+    padding-top:3px;font-size:14px;
+    font-weight: bold;float:left;
+}
+#aboutMenu .tip{
+    width:190px;border:solid 2px #ffa200;
+    position:absolute;padding:10px;
+    background-color:#fff;display:none;
+}
+#aboutMenu .tip li{
+    line-height: 23px;
+}
+#aboutMenu #sort{
+    position:absolute;display:none;
+}

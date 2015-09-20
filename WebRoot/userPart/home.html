@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>医疗挂号</title>
+    <link rel="stylesheet" type="text/css" href="homeCss.css" />
+    <link rel="stylesheet" type="text/css" href="css3Animate.css" />
+    <link rel="stylesheet" type="text/css" href="list_style.css" />
+    <script type="text/javascript" src="/dbDesign/jquery.js"></script>
+    <script type="text/javascript" src="homeJs.js"></script>
+    <script type="text/javascript" src="list_hover.js"></script>
+    <style type="text/css">
+         
+table{
+	width:100%;
+	border:1 solid #000;
+	background-color:#94c0be;
+	font-size:20px;
+}
+table tr{
+	width:100%;
+	margin:0 20px;
+	background-color:#94c0be;
+}
+table tr td{
+	margin:0 20px;
+	background-color:#94c0be;
+	text-align:center;
+}
+table tr:first-child{
+	background-color:#94c0ff;
+}
+.btn{
+    width: 50%;
+    padding: 3%;
+    margin-bottom: 8%;
+    background:#0077a2;
+    font-family: 'Open Sans', sans-serif;
+    color: #ECECEC;
+    box-shadow: inset 0px 0px 10px #666464;
+    -webkit-text-shadow: 0px 0px 3px #000;
+    -moz-text-shadow: 0px 0px 3px #000;
+    -o-text-shadow: 0px 0px 3px #000;
+    -ms-text-shadow: 0px 0px 3px #000;
+    font-size: 20px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    font-weight:500;
+    border-radius: 5px;
+    transition: 0.5s;
+    -webkit-appearance:none;
+    -webkit-transition: 0.5s;
+    -moz-transition: 0.5s;
+    -o-transition: 0.5s;
+    -ms-transition: 0.5s;
+}
+.btn:hover{
+     background:#128A42;
+     color:#fff;
+ }
+   </style>
+    <script type="text/javascript" >
+			function maxTime(){ 
+		       var d=new Date(),str=''; 
+		       str +=d.getFullYear()+'-'; //获取当前年份 
+		       str +=d.getMonth()+1+'-'; //获取当前月份（0——11） 
+		       str +=d.getDate(); 
+		    }
+		   function doSearch(){
+	             if($("#userContent input[name=\"userName\"]").val().length<=0){
+	            	 alert("姓名不能为空");
+	            	 return;
+	             }
+	             if($("#userContent input[name=\"age\"]").val().length<=0){
+	            	 alert("年龄不能为空");
+	            	 return;
+	             }
+	             if($("#userContent input[name=\"idCard\"]").val().length!=18|| isNaN($("#userContent input[name=\"idCard\"]").val())){
+	                    alert("身份证信息有误");
+	                    return;
+	             }
+	             if($("#userContent input[name=\"datetime\"]").val().length<=0){
+	                    alert("日期有误");
+	                    return;
+	             }   
+	             $.ajax({ 
+                    type : "POST", 
+                    url : "doSearch.jsp", 
+                    data: $("#userContent").serialize()+"&department="+$("#department").find("option:selected").text()+"&title="+$("#docTitle").find("option:selected").text(),  //整个表单提交
+                    success : function(responseText) {
+                         $("#loadAssign").empty();
+                         $("#loadAssign").append(responseText);
+                         if(responseText.length>50)
+                            $("#loadAssignNext").show();
+                         //alert(responseText);
+                    },error : function(){
+                         alert("doSearch error");
+                    } 
+                });  
+            }
+            function regisAuser(){
+               var index =parseInt($("#docIndex").val())+1;
+            var name = $("#loadAssign tr:nth-child("+index+") td:first-child").html();
+            var department = $("#loadAssign tr:nth-child("+index+") td:nth-child(2)").html();
+            var title = $("#loadAssign tr:nth-child("+index+") td:nth-child(3)").html();
+            var waitnum = $("#loadAssign tr:nth-child("+index+") td:nth-child(4)").html();
+            var datetime =$("#loadAssign tr:nth-child("+index+") td:nth-child(5)").html();
+            var ClassTh =$("#loadAssign tr:nth-child("+index+") td:nth-child(6)").html();
+            var idcard = $("#userContent input[name=\"idCard\"]").val();
+            //alert(index+" "+name+" "+department+" "+title+" "+waitnum+" "+datetime+" "+ClassTh+" "+idcard);
+              $.ajax({
+                url:"regisAuser.jsp",
+                type:"POST",
+                data:"name="+name+"&department="+department+"&title="+title+"&waitnum="+waitnum+"&datetime="+datetime+"&ClassTh="+ClassTh+"&idcard="+idcard,
+                success:function(responseText){
+                	alert(responseText);
+                },error:function(XMLHttpRequest){
+                    alert(XMLHttpRequest.status);
+                }
+              }); 
+            }
+       
+            function doSubmit4(){
+                $.ajax({
+                url:"getDocAssigns.jsp",
+                type:"POST",
+                data:$("#doSubmit4").serialize(),
+                success:function(responseText){
+                	$("#doSubmit4Next").empty();
+                	$("#doSubmit4Next").append(responseText);
+                 },error:function(){
+                    alert("请先登录");
+                 }
+                });   
+            }
+            
+           
+            
+	 $(function(){
+       $.ajax({
+        url:'/dbDesign/userPart/homeJSP/getDepartName.jsp',
+        type:'get',
+        success:function(responseText){
+        	$.each(responseText.split("#"),function(){
+        		if(this!="")
+                    $(".loadDepart").append("<option>"+this+"</option>");
+             });
+        }
+        });
+    
+    $("#department3").change(function(){
+        $("#docTitle3").empty();
+        $.ajax({
+            url:'/dbDesign/userPart/homeJSP/getDocTitle.jsp',
+            type:'get',
+            data:'department='+$("#department3 option:selected").text(),
+            success:function(responseText){
+            	$.each(responseText.split("#"),function(){
+            		if(this!="")
+                        $("#docTitle3").append("<option>"+this+"</option>");
+                 });
+            }
+        });
+    });
+    
+    $("#docTitle3").change(function(){
+        $("#docName3").empty();
+        $.ajax({
+            url:'/dbDesign/workPart/worker/getDoctors.jsp',
+            type:'get',
+            data:'department='+$("#department3 option:selected").text()+"&title="+$("#docTitle3 option:selected").text(),
+            success:function(responseText){
+            	$.each(responseText.split("#"),function(){
+            		if(this!="")
+                        $("#docName3").append("<option>"+this+"</option>");
+                 });
+            }
+        });
+    });
+           
+           
+            });
+            
+    </script>
+</head>
+<body>
+<div class="topBar">
+    <span><a href="logIn/logIn.html">登陆/注册</a></span>
+    <span><a href="#"></a></span>
+</div>
+<div class="tImage">
+
+</div>
+<div class="wrap">
+      <ul class="nav-menu clearfix unstyled">
+        <li><a href="#" class="three-d">
+            主页
+            <span class="three-d-box"><span class="front">主页</span><span class="back">主页</span></span>
+        </a></li>
+        <li><a href="#" class="three-d">
+            服务
+            <span class="three-d-box"><span class="front">服务</span><span class="back">服务</span></span>
+        </a></li>
+        <li><a href="#" class="three-d">
+            科室
+            <span class="three-d-box"><span class="front">科室</span><span class="back">科室</span></span>
+        </a></li>
+        <li><a href="#" class="three-d">
+            相关信息
+            <span class="three-d-box"><span class="front">相关信息</span><span class="back">相关信息</span></span>
+        </a></li>
+      </ul>
+    <div class="content">
+        <div id="homePage">
+            <div style="padding:0; margin:0">
+                <iframe src="af0063dc7e7b0cd9e8cc1bdea7bae50356d0f89ee9a5/af0063dc7e7b0cd9e8cc1bdea7bae50356d0f89ee9a5.html" width="800" height="350" frameborder="0" scrolling="no" allowTransparency="true"></iframe>
+            </div>
+        </div>
+        <div id="servicePage">
+            <form id="userContent" name="userContent" action="" method="post">
+                <table>
+                    <th>
+                    <td>患者信息填写</td>
+                    </th>
+                    <tr>
+                        <td>姓名</td>
+                        <td><input type="text" name="userName" value="" width="50px"/></td>
+                    </tr>
+                    <tr>
+                        <td>年龄</td>
+                        <td><input type="number" name="age" value="" width="50px"/></td>
+                    </tr>
+                    <tr>
+                        <td>身份证号码</td>
+                        <td><input type="text" name="idCard" value="" maxlength="18" width="50px"/></td>
+                    </tr>
+                    <tr>
+                        <td>选择日期</td>
+                        <td>
+                            <input  id="datetime" name="datetime" type="date" required value="" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>选择班次</td>
+                        <td>
+                            <select name = "timestate">
+                               <option value="morning" selected="selected" >morning</option>
+                               <option value="afternoon">afternoon</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>科室</td>
+                        <td>
+                            <select id="department"  style="width:152px;">
+                                <option>...</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>医生职称</td>
+                        <td>
+                            <select id="docTitle" style="width:152px;">
+                                <option>...</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="button" class="btn"onclick="doSearch()"value="提交" /> </td>
+                        <td><input type="reset" class="btn"value="重置" /> </td>
+                    </tr>
+                </table>
+            </form>
+            <div id="loadAssign" class="loadAssign" style="display: block;width:70%;margin:0 auto;clear:both;">
+            </div>
+            <div id="loadAssignNext" style="display:none;margin:10px auto;width:70%;">
+                                                       选择第<input id="docIndex" type="number" value="" />位医师 
+                <input type="button" onclick="regisAuser()" value="提交" />
+            </div>
+        </div>
+        <div id="departPage">
+            <form id="doSubmit4" style="display:block;width:50%;margin:0 auto;">
+                   <table>
+                       <tr>
+                            <td>科室</td>
+                            <td><select id="department3" name="department" class="loadDepart" style="width:150px;"></select></td>
+                        </tr>
+                        <tr>
+                            <td>头衔</td>
+                            <td><select  name = "title" id="docTitle3" style="width:152px;">
+                                <option>...</option>
+                               </select>
+                            </td>
+                        </tr>
+                         <tr>
+                            <td>医生姓名</td>
+                            <td><select  name = "docName" id="docName3" style="width:152px;">
+                                <option>...</option>
+                               </select>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td>选择日期</td>
+                        <td>
+                            <input  id="datetime" name="datetime" type="date" required value="" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>选择班次</td>
+                        <td>
+                            <select name = "timestate">
+                               <option value="morning" selected="selected" >morning</option>
+                               <option value="afternoon">afternoon</option>
+                            </select>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td colspan=2><input type="button" class="btn" onclick="doSubmit4()" value="查询" /> </td>
+                        </tr>
+                   </table>
+               </form>
+               <div id="doSubmit4Next" class="loadAssign" style="display:block;width:70%;margin:0 auto;" ></div>
+            
+        </div>
+        <div id="aboutPage">
+            <div id="aboutMenu">
+                <ul>
+                    <li class="menu">
+                        <div>
+                            <img alt="" src="images/Windows.png" />
+                            <span>相关信息</span>
+                        </div>
+                        <ul class="content" style="height:400px;">
+                            <li class="optn"><a href="#">医院信息</a></li>
+                            <ul class="tip">
+                                <li><a href="#">简介</a></li>
+                                <li><a href="#">器械展示</a></li>
+                                <li><a href="#">著名医生</a></li>
+                            </ul>
+                            <li class="optn"><a href="#">科室信息</a></li>
+                            <ul class="tip">
+                                <li><a href="#">科室简介</a></li>
+                                <li><a href="#">科室列表</a></li>
+                            </ul>
+                            <li class="optn"><a href="#">用户须知</a></li>
+                            <ul class="tip">
+                                <li><a href="#">预约须知</a></li>
+                                <li><a href="#">服务协议</a></li>
+                                <li><a href="#">投诉通道</a></li>
+                            </ul>
+                        </ul>
+                        <img id="sort" src="images/sort.gif" alt="" />
+                    </li>
+                </ul>
+            </div>
+            <div id="aboutContent">
+            
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <span>系统制作人：leo wang</span>
+    </div>
+</div>
+</body>
+</html>

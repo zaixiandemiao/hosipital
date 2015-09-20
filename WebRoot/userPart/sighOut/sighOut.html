@@ -1,0 +1,66 @@
+
+<!--
+Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+-->
+<!DOCTYPE html>
+<html>
+<head>
+		<meta charset="utf-8">
+		<link href="css/style.css" rel='stylesheet' type='text/css' />
+	    <script type="text/javascript" src="/dbDesign/jquery.js" ></script>
+	    <script type="text/javascript" src="js/sighOut.js"></script>
+		<!--//webfonts-->
+</head>
+<body>
+	<div class="main">
+		<div class="header" >
+			<h1>注册一个新用户</h1>
+		</div>
+		<p>注册新用户须实名注册，本站保证不利用用户信息进行任何商业目的的交易。</p>
+			<form action="signOut.jsp" method="post">
+				<ul class="left-form">
+					<h2>新用户名</h2>
+					<li>
+						<input type="text"   placeholder="用户名" name="username" required/>
+						<a href="#" class="icon ticker"> </a>
+						<div class="clear"> </div>
+					</li>
+					<li>
+						<input type="password"  id="oPass" placeholder="不小于6位的密码" name="passwd" required/>
+						<a href="#" class="icon into"> </a>
+						<div class="clear"></div>
+					</li>
+					<li>
+						<input type="password" id="sPass"   placeholder="确认密码" required/>
+						<a href="#" class="icon into"> </a>
+						<div class="clear"> </div>
+					</li>
+					<li>
+						<input type="text" id="relName" placeholder="真实姓名" name="realName" required/>
+						<a href="#" class="icon into"> </a>
+						<div class="clear"> </div>
+					</li>
+					<li>
+						<input type="text"  id="idCard" placeholder="18位数字的身份证号" maxlength="18" name="idCard" required/>
+						<a href="#" class="icon into"> </a>
+						<div class="clear"> </div>
+					</li>
+					<li>
+						<input type="text" id="telNum" placeholder="11位数字手机号" maxlength="11" name="tel" required/>
+						<a href="#" class="icon into"> </a>
+						<div class="clear"> </div>
+					</li>
+					<label class="checkbox"><input type="checkbox" name="checkbox"><i> </i>我已阅读协议并同意</label>
+					<input type="submit" id="submit" value="确认并注册" disabled="disabled">
+					<div class="clear"> </div>
+				</ul>
+			</form>
+			
+		</div>
+
+	
+</body>
+</html>

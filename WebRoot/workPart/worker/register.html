@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script type="text/javascript" src="/dbDesign/jquery.js"></script>
+    <script type="text/javascript">
+        function doSubmit(){
+	             if($("input[name=\"userName\"]").val().length<=0){
+	                    alert("姓名不能为空");
+	                    return;
+	             }
+	             if($("input[name=\"idCard\"]").val().length!=18 || isNaN($("input[name=\"idCard\"]").val())){
+	                    alert("身份证信息有误");
+	                    return;
+	             }
+	             if($("input[name=\"tel\"]").val().length!=11 || isNaN($("input[name=\"tel\"]").val())){
+	                    alert("手机号码信息有误");
+	                    return;
+	             }    
+	             $.ajax({ 
+                    type : "POST", 
+                    url : "regisHealCard.jsp", 
+                    data: $("#userContent").serialize(),  //整个表单提交
+                    success : function(responseText) {
+                         alert(responseText);
+                    } 
+                });  
+            }
+        function doSubmit2(){
+            $.ajax({ 
+                    type : "POST", 
+                    url : "doSearchDoc.jsp", 
+                    data: $("#searchDoc").serialize(),  //整个表单提交
+                    success : function(responseText) {
+                         $("#showDoc").empty();
+                         $("#showDoc").append(responseText);
+                         $("#showDocNext").show();
+                    },error:function(){
+                         alert("error");
+                    } 
+                });
+        }
+        function doSubmit3(){
+            $.ajax({ 
+                    type : "POST", 
+                    url : "doChangeAssign.jsp", 
+                    data: $("#doSubmit3").serialize(),  //整个表单提交
+                    success : function(responseText) {
+                         $("#doSubmit3_showDoc").empty();
+                         $("#doSubmit3_showDoc").append(responseText);
+                         $.ajax({ 
+                             type : "POST", 
+                             url : "doSearchDoc.jsp", 
+                             data: $("#doSubmit3").serialize(),  //整个表单提交
+                               success : function(responseText) {
+                                   $("#doSubmit3_showDocNext").empty();
+                                  $("#doSubmit3_showDocNext").append(responseText);
+                                  $("#doSubmit3_hideButton").show();
+                             },error:function(){
+                             alert("error");
+                             } 
+                         });
+                    },error:function(){
+                         alert("doSubmit3 error");
+                    } 
+                });
+        }
+        function doSubmit4(){
+            $.ajax({ 
+                    type : "POST", 
+                    url : "getDocAssign.jsp", 
+                    data: $("#doSubmit4").serialize(),  //整个表单提交
+                    success : function(responseText) {
+                          $("#doSubmit4_showDoc").empty();
+                          $("#doSubmit4_showDoc").append(responseText);
+                    },error:function(){
+                         alert("doSubmit3 error");
+                    } 
+                });
+        }
+        
+        function regisAman(){
+            var index =parseInt($("#docIndex").val())+1;
+            var name = $("#showDoc tr:nth-child("+index+") td:first-child").html();
+            var department = $("#showDoc tr:nth-child("+index+") td:nth-child(2)").html();
+            var title = $("#showDoc tr:nth-child("+index+") td:nth-child(3)").html();
+            var waitnum = $("#showDoc tr:nth-child("+index+") td:nth-child(4)").html();
+            
+            //alert(index+" "+name+" "+department+" "+title+" "+waitnum);
+            $.ajax({
+                url:"regisAman.jsp",
+                type:"POST",
+                data:"name="+name+"&department="+department+"&title="+title+"&waitnum="+waitnum+"&hcid="+$("#hcId2").val(),
+                success:function(responseText){
+                	alert(responseText);
+                },error:function(){
+                    alert("regisAman error");
+                }
+               });   
+        }
+        function changeAman(){
+            var index =parseInt($("#docIndex2").val())+1;
+            var name = $("#doSubmit3_showDocNext tr:nth-child("+index+") td:first-child").html();
+            var department = $("#doSubmit3_showDocNext tr:nth-child("+index+") td:nth-child(2)").html();
+            var title = $("#doSubmit3_showDocNext tr:nth-child("+index+") td:nth-child(3)").html();
+            var waitnum = $("#doSubmit3_showDocNext tr:nth-child("+index+") td:nth-child(4)").html();
+            
+            //alert(index+" "+name+" "+department+" "+title+" "+waitnum);
+            $.ajax({
+                url:"changeAssign.jsp",
+                type:"POST",
+                data:"name="+name+"&department="+department+"&title="+title+"&waitnum="+waitnum+"&hcid="+$("#hcId3").val(),
+                success:function(responseText){
+                	alert(responseText);
+                },error:function(){
+                    alert("regisAman error");
+                }
+               }); 
+        }
+    
+        $(function(){
+            $(".menu li").each(function(index){
+                $(this).mouseover(function(){
+                    $(".menu li.tabFouse").removeClass("tabFouse");
+                    $(this).addClass("tabFouse");
+                    $(".content li:eq("+index+")").show().siblings().hide();
+                });
+            });
+            $.ajax({
+            url:'/dbDesign/userPart/homeJSP/getDepartName.jsp',
+            type:'get',
+            success:function(responseText){
+            	$.each(responseText.split("#"),function(){
+            		if(this!="")
+                        $(".loadDepart").append("<option>"+this+"</option>");
+                 });
+            }
+            });
+    $("#department1").change(function(){
+        $("#docTitle1").empty();
+        $.ajax({
+            url:'/dbDesign/userPart/homeJSP/getDocTitle.jsp',
+            type:'get',
+            data:'department='+$("#department1 option:selected").text(),
+            success:function(responseText){
+            	$.each(responseText.split("#"),function(){
+            		if(this!="")
+                        $("#docTitle1").append("<option>"+this+"</option>");
+                 });
+            }
+        });
+    });
+      $("#department2").change(function(){
+        $("#docTitle2").empty();
+        $.ajax({
+            url:'/dbDesign/userPart/homeJSP/getDocTitle.jsp',
+            type:'get',
+            data:'department='+$("#department2 option:selected").text(),
+            success:function(responseText){
+            	$.each(responseText.split("#"),function(){
+            		if(this!="")
+                        $("#docTitle2").append("<option>"+this+"</option>");
+                 });
+            }
+        });
+    });
+     $("#department3").change(function(){
+        $("#docTitle3").empty();
+        $.ajax({
+            url:'/dbDesign/userPart/homeJSP/getDocTitle.jsp',
+            type:'get',
+            data:'department='+$("#department3 option:selected").text(),
+            success:function(responseText){
+            	$.each(responseText.split("#"),function(){
+            		if(this!="")
+                        $("#docTitle3").append("<option>"+this+"</option>");
+                 });
+            }
+        });
+    });
+     $("#docTitle3").change(function(){
+        $("#docName3").empty();
+        $.ajax({
+            url:'getDoctors.jsp',
+            type:'get',
+            data:'department='+$("#department3 option:selected").text()+"&title="+$("#docTitle3 option:selected").text(),
+            success:function(responseText){
+            	$.each(responseText.split("#"),function(){
+            		if(this!="")
+                        $("#docName3").append("<option>"+this+"</option>");
+                 });
+            }
+        });
+    });
+            
+        });
+    </script>
+    <link rel="stylesheet" type="text/css" href="regCss.css" />
+</head>
+<body>
+<div class="wrap">
+    <span style="float:right;" > <a href="/dbDesign/logOut.jsp">退出</a></span>
+    <div class="menu" style="clear:both;" >
+        <li class="tabFouse">办理疗养卡</li>
+        <li >挂号</li>
+        <li >修改挂号</li>
+        <li>查询挂号信息</li>
+    </div>
+    <div class="content">
+        <li >
+            <h1>办理诊疗卡</h1>
+            <br><br><br><br><br><br>
+            <form id="userContent" class="reg" name="userContent" action="" method="post">
+                <table>
+                    <th>
+                    <td>信息填写</td>
+                    </th>
+                    <tr>
+                        <td>姓名</td>
+                        <td><input type="text" name="userName" value="" width="50px"/></td>
+                    </tr>
+                    <tr>
+                        <td>身份证号码</td>
+                        <td><input type="text" name="idCard" value="" width="50px" maxlength="18" /></td>
+                    </tr>
+                    <tr>
+                        <td>电话号码</td>
+                        <td><input type="text" name="tel" value="" maxlength="11" width="50px"/></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            男性：<input type="radio" checked="checked" name="Sex" value="male" /></td>
+                        <td>
+                            女性：<input type="radio" checked="checked" name="Sex" value="female" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="button" onclick="doSubmit()" value="提交" /> </td>
+                        <td><input type="reset" value="重置" /> </td>
+                    </tr>
+                </table>
+            </form>
+        </li>
+        <li>
+            <div>
+                <form id="searchDoc"  action="" method="post">
+                    <table>
+                        <th>
+                              <td>挂号信息填写</td>
+                        </th>
+                        <tr>
+                            <td>科室</td>
+                            <td> <select name="department" id="department1" class="loadDepart" style="width:150px;"></select></td>
+                        </tr>
+                        <tr>
+                            <td>头衔</td>
+                            <td><select  name = "title" id="docTitle1" style="width:152px;">
+                                <option>...</option>
+                               </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan=2><input type="button" onclick="doSubmit2()" value="查询在职医师" /> </td>
+                        </tr>
+                    </table>
+                </form>
+                <div id="showDoc" class="showDoc" style="display: block;width:70%;margin:0 auto;">
+                    
+                </div>
+                <div id="showDocNext" style="display:none;margin:10px 160px;">
+                                                       诊疗卡号<input id="hcId2" type = "text" value="" /> 选择第<input id="docIndex" type="number" value="" />位医师 
+                <input type="button" onclick="regisAman()" value="提交" />
+                </div>
+            </div>
+        </li>
+        <li >
+            <div>
+               <form id="doSubmit3">
+                   <table>
+                       <tr>
+                          <td>诊疗卡ID</td> <td><input name="hcid" type="text" /> </td>
+                       </tr>
+                       <tr>
+                            <td>科室</td>
+                            <td><select id="department2" name="department" class="loadDepart" style="width:150px;"></select></td>
+                        </tr>
+                        <tr>
+                            <td>头衔</td>
+                            <td><select  name = "title" id="docTitle2" style="width:152px;">
+                                <option>...</option>
+                               </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan=2><input type="button" onclick="doSubmit3()" value="查询" /> </td>
+                        </tr>
+                   </table>
+               </form>
+               <div id="doSubmit3_showDoc" class="showDoc" style="display: block;width:70%;margin:0 auto;">
+                  
+               </div>
+               <div id="doSubmit3_showDocNext" class="showDoc" style="width:70%;margin:0 auto;">
+                                                                             
+               </div>
+               <div id="doSubmit3_hideButton" style="display:none;margin:10px 160px;">
+                                                       诊疗卡号<input id="hcId3" type = "text" value="" /> 选择第<input id="docIndex2" type="number" value="" />位医师 
+                <input type="button" onclick="changeAman()" value="提交" />
+                </div>
+            
+            </div>
+        
+        </li>
+        <li>
+           <form id="doSubmit4">
+                   <table>
+                       <tr>
+                            <td>科室</td>
+                            <td><select id="department3" name="department" class="loadDepart" style="width:150px;"></select></td>
+                        </tr>
+                        <tr>
+                            <td>头衔</td>
+                            <td><select  name = "title" id="docTitle3" style="width:152px;">
+                                <option>...</option>
+                               </select>
+                            </td>
+                        </tr>
+                         <tr>
+                            <td>医生姓名</td>
+                            <td><select  name = "docName" id="docName3" style="width:152px;">
+                                <option>...</option>
+                               </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan=2><input type="button" onclick="doSubmit4()" value="查询" /> </td>
+                        </tr>
+                   </table>
+               </form>
+               <div id="doSubmit4_showDoc" class="showDoc" style="display: block;width:70%;margin:0 auto;">
+                  
+               </div>
+        </li>
+    </div>
+</div>
+</body>
+</html>

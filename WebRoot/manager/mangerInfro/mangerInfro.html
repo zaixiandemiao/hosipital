@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- TemplateBeginEditable name="doctitle" -->
+    <title>用户信息</title>
+    <!-- TemplateEndEditable -->
+    <!-- TemplateBeginEditable name="head" -->
+    <!-- TemplateEndEditable -->
+    <link rel="stylesheet" type="text/css" href="mangerInfro.css" />
+    <style type="text/css">
+        /* 请将所有版本的 IE 的 css 修复放在这个条件注释中 */
+        .twoColHybLtHdr #sidebar1 { padding-top: 30px; }
+        .twoColHybLtHdr #mainContent { zoom: 1; padding-top: 15px; }
+        /* 上面的专用 zoom 属性为 IE 提供为避免几个错误而可能需要的 hasLayout */
+    </style>
+    <script type="text/javascript" src="/dbDesign/jquery.js"></script>
+    <script type="text/javascript" src="controlMIF.js"></script>
+    <script type="text/javascript">
+      function doSubmit(){
+	             if($("#registorInfro input[type=\"text\"]").val().length<=0){
+	            	 alert("账号不能为空");
+	            	 return;
+	             }
+	             if($("#registorInfro input[name=\"registorPass\"]").val().length<6){
+	            	 alert("密码不能为空");
+	            	 return;
+	             }
+	             if($("#registorInfro input[name=\"registorPass\"]").val()!=$("#registorInfro input[name=\"againpassword\"]").val()){
+	                    alert("原始密码和重复密码必须相同");
+	                    return;
+	             }   
+	             $.ajax({ 
+                    type : "POST", 
+                    url : "addRegistor.jsp", 
+                    data: $("#registorInfro").serialize(),  //整个表单提交
+                    success : function(responseText) {
+                         alert(responseText);
+                    } 
+                });  
+            }
+    </script>
+</head>
+
+<body class="twoColHybLtHdr">
+
+<div id="container">
+    <div id="header">
+        <h1>欢迎</h1><a href="/dbDesign/logOut.jsp">退出</a>
+        <!-- end #header -->
+    </div>
+    <div id="sidebar1">
+        <h3>控制面板</h3>
+        <ul>
+            <li id="1">管理用户</li>
+            <li id="2">维护数据库中的表</li>
+            <li id="3">查询</li>
+        </ul>
+    </div>
+    <div id="mainContent">
+        <div class="tab">
+            <div class="tab_1">
+                   用户名<input type="text" value="root"/> <input type="button" value="修改用户名" /> 密码<input type="password" />
+                   <input type="button" value="修改密码" /> select<input type="checkbox" /> insert<input type="checkbox"/>
+            </div>
+        </div>
+        <div class="tab">
+            <div class="tab_2">维护科室表/诊疗费标准</div>
+            <div class="showCost tab_2span"></div>
+            <div class="tab_2 ">维护医生表</div>
+            <div class="showCost tab_2span"></div>
+            <div class="tab_2">维护医生排班表</div>
+            <div class="showCost tab_2span">
+                  <div>
+                                                                                科室   <select id="loadDepart"></select><select id="loadDoc"></select>
+                       <input type="button" id="searchDocByDepart" value="查询" />                                                         
+                  </div>
+                  <div id="docBeLoaded"></div>
+            </div>
+            <div class="tab_2">注册一个挂号人员账号</div>
+            <div class="showCost tab_2span">
+                 <form id="registorInfro" action="addRegistor" method="post">
+                                                                                        用户名 <input type="text" name="registorName" placeholder="username" value="" /> 
+                                                                                        密码     <input type="password" name="registorPass" placeholder="password" value="" /> 
+                                                                                        重复密码     <input type="password" name="againpassword" placeholder="again" value="" />
+                         <input type="button" onclick="doSubmit()" value="提交" /> 
+                 </form>
+            </div>
+        </div>
+        <div class="tab">
+            <div  class="tab_3">该班次总的费用</div>
+            <div id="tab3_1" class="showCost"></div>
+            <div  class="tab_3">各个挂号人员该班次总的费用</div>
+            <div id="tab3_2" class="showCost"></div>
+            <div class="tab_3">各个医生该班次总的费用</div>
+            <div id="tab3_3" class="showCost"></div>
+        </div>
+
+    </div>
+    <!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+    <br class="clearfloat" />
+    <div id="footer">
+        <p>脚注</p>
+        <!-- end #footer -->
+    </div>
+    <!-- end #container -->
+</div>
+</body>
+</html>

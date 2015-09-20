@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	<title>AdminPanel</title>
+	<link media="all" rel="stylesheet" type="text/css" href="css/all.css" />
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script type="text/javascript">window.jQuery || document.write('<script type="text/javascript" src="js/jquery-1.7.2.min.js"><\/script>');</script>
+	<script type="text/javascript" src="js/jquery.main.js"></script>
+	<script type="text/javascript" src="/jquery.js"></script>
+	<script type="text/javascript" src="js/tabSwitch.js"></script>
+	<style type ="text/css">
+	  #tab-2 ul li span{
+	display: inline-block;
+	width:70px;
+	text-align:center;
+	border:1px solid #eee;
+	margin:0 30px;
+}
+	</style>
+	
+	<script type="text/javascript">
+	    function dosubmit(){
+	        if($("#changePass1").val().length<6){
+	           alert("密码必须大于等于6位");
+	            return ;
+	        }
+	        if($("#changePass1").val()!=$("#changePass2").val()){
+	           alert("新密码必须相同");
+	            return ;
+	        }
+	        $.ajax({
+	          url : "changePass.jsp",
+	          type : "post",
+	          data :$("#changePassForm").serialize(),
+	          success :function(responseText){
+	             alert(responseText);
+	          },error:function(){
+	             alert("change Pass error");
+	          }
+	        }  
+	        );
+	    
+	    }
+	    $(function(){
+	       $.ajax({ 
+           type : 'get', 
+           url : 'getUser.jsp', 
+           success : function(responseText) {
+        	 $.each(responseText.split("#"),function(index){
+        		if(this!="")
+                    $("#tab-1 li:nth-child("+(index+1)+") input").val(this);
+              });
+           },error:function(){
+        	  alert("error");
+           } 
+    }); 
+    
+     $.ajax({ 
+           type : 'get', 
+           url : 'getAppoint.jsp', 
+           success : function(responseText) {
+        	 $("#tab-2 ul").append(responseText);
+           },error:function(){
+        	  alert("error");
+           } 
+    });
+	    
+	    });
+	    
+	</script>
+	
+	<!--[if lt IE 9]><link rel="stylesheet" type="text/css" href="css/ie.css" /><![endif]-->
+</head>
+<body>
+	<div id="wrapper">
+		<div id="content">
+			<div class="c1">
+				<div class="controls">
+					<nav class="links" style="display: none;">
+						<ul>
+							<li><a href="#" class="ico1">Messages <span class="num">26</span></a></li>
+							<li><a href="#" class="ico2">Alerts <span class="num">5</span></a></li>
+							<li><a href="#" class="ico3">Documents <span class="num">3</span></a></li>
+						</ul>
+					</nav>
+					<div class="profile-box">
+						<span class="profile">
+							<a href="#" class="section">
+								<img class="image" src="images/img1.png" alt="image description" width="26" height="26" />
+								<span class="text-box">
+									欢迎
+									<strong class="name"></strong>
+								</span>
+							</a>
+							<a href="#" class="opener">opener</a>
+						</span>
+						<a href="/dbDesign/userPart/home.html" class="btn-on">On</a>
+					</div>
+				</div>
+				<div class="tabs">
+					<div id="tab-1" class="tab">
+						<article>
+							<div class="text-section">
+								<h1>用户基本信息</h1>
+								<p>此页包含用户的基本信息</p>
+							</div>
+							<form method="post" action="changeUser.jsp">
+								<ul class="states">
+									<li class="error">姓名&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="realName"></li>
+									<li class="warning">身份证号<input type="text" name="idCard"></li>
+									<li class="success">手机号码<input type="text" name="tel"></li>
+									<li class="error"><input type="submit" onclick="" value="确定修改"></li>
+								</ul>
+							</form>
+						</article>
+					</div>
+					<div id="tab-2" class="tab">
+						<article>
+							<div class="text-section">
+								<h1>预约信息</h1>
+								<p>此页包含您的未过期的预约</p>
+							</div>
+							<ul class="states">
+							    <li><span>日期</span><span>班次</span><span>科室</span><span>医师职称</span><span>候诊号</span><span>金额</span></li>
+								<!-- <li></li>
+								<div>
+
+								</div>
+								<li></li>
+								<div>
+
+								</div> -->
+							</ul>
+						</article>
+					</div>
+					<div id="tab-3" class="tab">
+						<article>
+							<div class="text-section">
+								<h1></h1>
+								<p></p>
+							</div>
+							<ul class="states">
+								<li class="error"></li>
+								<li class="warning"></li>
+								<li class="success"></li>
+							</ul>
+						</article>
+					</div>
+					<div id="tab-4" class="tab">
+						<article>
+							<div class="text-section">
+								<h1></h1>
+								<p></p>
+							</div>
+							<ul class="states">
+								<li class="error"></li>
+								<li class="warning"></li>
+								<li class="success"></li>
+							</ul>
+						</article>
+					</div>
+					<div id="tab-6" class="tab">
+						<article>
+							<div class="text-section">
+								<h1></h1>
+								<p></p>
+							</div>
+							<ul class="states">
+								<li class="error"></li>
+								<li class="warning"></li>
+								<li class="success"></li>
+							</ul>
+						</article>
+					</div>
+					<div id="tab-8" class="tab">
+						<article>
+							<div class="text-section">
+								<h1>修改密码</h1>
+								<p></p>
+							</div>
+							<form id="changePassForm" action="" method="post" >
+							<ul class="states">	
+								<li class="warning">原密码<input type="password" name="originPass"></li>
+								<li class="success">新密码<input type="password" id="changePass1" name="changePass" ></li>
+								<li class="success">新密码<input type="password" id="changePass2" ></li>
+								<li class="error"><input type="button" onclick="dosubmit()" value="确定修改"></li>
+							</ul>
+							</form>
+						</article>
+					</div>
+				</div>
+			</div>
+		</div>
+		<aside id="sidebar">
+			<strong class="logo"><a href="#">lg</a></strong>
+			<ul class="tabset buttons">
+				<li class="active">
+					<a href="#tab-1" class="ico1"><span>用户基本信息</span><em></em></a>
+					<span class="tooltip"><span>用户基本信息</span></span>
+				</li>
+				<li>
+					<a href="#tab-2" class="ico2"><span>预约信息</span><em></em></a>
+					<span class="tooltip"><span>预约信息</span></span>
+				</li>
+				<li>
+					<a href="#tab-3" class="ico3"><span>我的收藏</span><em></em></a>
+					<span class="tooltip"><span>我的收藏</span></span>
+				</li>
+				<li>
+					<a href="#tab-4" class="ico4"><span>历史记录</span><em></em></a>
+					<span class="tooltip"><span>历史记录</span></span>
+				</li>
+				<li>
+					<a href="#tab-6" class="ico6">
+						<span>评论</span><em></em>
+					</a>
+					<span class="num">11</span>
+					<span class="tooltip"><span>评论</span></span>
+				</li>
+				<li>
+					<a href="#tab-8" class="ico8"><span>修改密码</span><em></em></a>
+					<span class="tooltip"><span>修改密码</span></span>
+				</li>
+			</ul>
+			<span class="shadow"></span>
+		</aside>
+	</div>
+</body>
+</html>

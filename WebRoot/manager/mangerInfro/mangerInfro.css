@@ -1,0 +1,192 @@
+body  {
+    font: 100% 宋体, 新宋体;
+    background: #666666;
+    margin: 0; /* 最好将 body 元素的边距和填充设置为 0 以覆盖不同的浏览器默认值 */
+    padding: 0;
+    text-align: center; /* 在 IE 5* 浏览器中，这会将容器居中。文本随后将在 #container 选择器中设置为默认左对齐 */
+    color: #000000;
+}
+.twoColHybLtHdr #container {
+    width: 100%;  /* 这将创建一个占据 80% 浏览器宽度的容器 */
+    background: #FFFFFF;
+    margin: 0 auto; /* 自动边距（与宽度一起）会将页面居中 */
+    border: 1px solid #000000;
+    text-align: left; /* 这将覆盖 body 元素上的“text-align: center”。 */
+}
+.twoColHybLtHdr #header {
+    background: #DDDDDD;
+    padding: 0 10px;  /* 此填充会将出现在它后面的 div 中的元素左对齐。如果 #header 中使用的是图像（而不是文本），您最好删除填充。 */
+    border-bottom:2px solid #5555ff;
+}
+.twoColHybLtHdr #header h1 {
+    margin: 0; /* 将 #header div 中最后一个元素的边距设置为零将避免边距重叠（即 div 之间出现的无法解释的空白）。如果 div 周围有边框，则不必将边距设置为零，因为边框也会避免边距重叠 */
+    padding: 10px 0; /* 使用填充而不使用边距将可以使元素远离 div 的边缘 */
+}
+
+/* sidebar1 提示：
+1. 由于我们使用的是相对单位，因此最好不要在侧栏中使用填充。它将会增加符合标准的浏览器的总宽，并产生未知的实际宽度。
+2. 由于 sidebar 值以全方 (em) 为单位，请记住侧栏的宽度将随不同的默认文本大小而变化。
+3. 如果为 div 中的元素设置左边距和右边距，则会在 div 边缘和这些元素之间产生空白，如“.twoColHybLtHdr #sidebar1 p”规则中所示。
+*/
+.twoColHybLtHdr #sidebar1 {
+    float: left;
+    height:700px;
+    width: 12em; /* 由于此元素是浮动的，因此必须指定宽度 */
+    background: #EBEBEB; /* 将显示背景色，其宽度等于栏中内容的长度，*/
+    padding: 15px 0; /* 顶部和底部的填充将在该 div 中产生视觉空间 */
+}
+.twoColHybLtHdr #sidebar1 h3, .twoColHybLtHdr #sidebar1 p {
+    margin-left: 10px; /* 对于将要放在侧栏中的每个元素，都应当设置左边距和右边距 */
+    margin-right: 10px;
+}
+
+/* mainContent 提示：
+1. mainContent 和 sidebar1 之间的空白是由 mainContent div 的左边距创建的。无论 sidebar1 div 中包含多少内容，都将保留栏空白。如果您希望在 #sidebar1 中的内容结束时，用 #mainContent div 的文本填充 #sidebar1 空白，则可以删除此左边距。
+2. 请记住，如果在 mainContent div 中放置了过宽的元素，则有可能会导致“浮动下降”（即，侧栏下面非浮动的 mainContent 区域下降）。对于混合布局（总宽基于百分比，侧栏基于全方 (em)），则可能无法计算确切的可用宽度。如果用户的文本大小大于平均值，则侧栏 div 将更宽，因此，mainContent div 中的空间将更小。您应当注意到这种限制，当客户端使用 Contribute 添加内容时尤其如此。
+3. 在下面的 Internet Explorer 条件注释中，zoom 属性用来赋予 mainContent“hasLayout”。这可能会有助于避免若干特定于 IE 的错误。
+*/
+.twoColHybLtHdr #mainContent {
+    margin: 0 0 0 12em; /* 右边距可以用百分比或像素来指定，它会在页面的右下方产生空白。 */
+    padding:0 0 20px 0;
+    width:1000px;
+    height:auto;
+}
+#sidebar1 ul li{
+    margin-bottom: 20px;
+    border:1px solid #94c0be;
+    -webkit-transition: 0.5s ease .2s;
+    -moz-transition: 0.5s ease  .2s;
+    -ms-transition: 0.5s ease  .2s;
+    -o-transition: 0.5s ease  .2s;
+    transition: 0.5s ease  .2s;
+}
+
+#sidebar1 ul li:hover{
+    cursor: pointer;
+    background-color: #0c0c0c;
+    color:#f9f9f9;
+}
+
+.tab{
+    display:none;
+    width:100%;
+    height:100%;
+    margin-top:0;
+    font-family: "Liberation Sans";
+    font-weight: 200;
+}
+.tab:first-child{
+    display:block;
+}
+.tab:nth-child(2){
+    padding-top: 10px;
+    margin:0;
+    background-color: #868686;
+}
+
+.twoColHybLtHdr #footer {
+    padding: 0 10px; /* 此填充会将它上面 div 中的所有元素左对齐。 */
+    background:#DDDDDD;
+}
+.twoColHybLtHdr #footer p {
+    margin: 0; /* 将脚注中第一个元素的边距设置为零将避免出现可能的边距重叠（即 div 之间出现的空白）*/
+    padding: 10px 0; /* 就像边距会产生空白一样，此元素上的填充也将产生空白，但不会出现边距重叠问题 */
+}
+
+/* 要重用的各种类 */
+.fltrt { /* 此类可用来使页面中的元素向右浮动。浮动元素必须位于页面上要与之相邻的元素之前。 */
+    float: right;
+    margin-left: 8px;
+}
+.fltlft { /* 此类可用来使页面上的元素向左浮动 */
+    float: left;
+    margin-right: 8px;
+}
+.clearfloat { /* 此类应当放在 div 或 break 元素上，而且该元素应当是完全包含浮动的容器关闭之前的最后一个元素 */
+    clear:both;
+    height:0;
+    font-size: 1px;
+    line-height: 0px;
+}
+.tab_1{
+    width:100%;
+    background-color: #51938f;
+    color: #dc6200;
+    padding-left: 50px;
+}
+.tab_2{
+    width: 90%;
+    height: 30px;
+    margin:15px 10px;
+    background-color: #f3ffff;
+}
+.tab_2 + div{
+	width:90%;
+	height:auto;
+	margin:-15px 10px 0 10px;
+	padding:0;
+    background-color:#dec6ff;
+}
+.tab_2span div:first-child{
+	margin:10px 0px 5px 30px;
+	padding:10px 0px 5px 30px;
+	font-weight:100;
+	font-family:'微软雅黑';
+}
+.tab_2span div:first-child *{
+	margin-left:20px;
+}
+#docBeLoaded{
+	margin:0;
+	padding:0;
+	height:auto;
+}
+#docBeLoaded span{
+	display:inline-block;
+	margin:0;
+	padding:0;
+	width:150px;
+	height:auto;
+}
+#docBeLoaded input[type='submit']{
+	margin-left:50px;
+}
+.tab_3{
+    display:block;
+    width:80%;
+    margin:15px 50px;
+    border-radius: 8px;
+    text-align: center;
+    background-color: #4c95cd;
+    color: #fff;
+    cursor: pointer;
+    text-shadow: #2b333b;
+}
+.tab_2span span{
+	color: #ff7d4b;
+	display:inline-block;
+	width:160px;
+	text-align:center;
+}
+.showCost{
+    display:none;
+    width:78%;
+    height:200px;
+    margin-top:-16px;
+    margin-left:60px;
+    background-color:#51938f;
+    color: orange;
+}
+.showCost  table{
+	width:100%;
+	color:#fff;
+}
+.showCost  table tr td{
+	text-align:center;
+	border:2px solid #fff;
+	font-size:10px;
+}
+.showCost  table tr:first-child{
+	background-color:#888;
+	font-size:20px;	
+}
